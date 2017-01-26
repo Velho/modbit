@@ -1,0 +1,9 @@
+ModbusRTU Parser
+Data provided by Gambit Group.
+
+Currently builds on Windows platform, but Linux support
+can be easily added through the build system. Due to lack
+of functioning Linux machine Windows is sadly an option.
+
+
+Velho 2017
