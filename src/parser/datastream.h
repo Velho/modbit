@@ -1,5 +1,5 @@
-#ifndef WEBSTREAM_H
-#define WEBSTREAM_H
+#ifndef DATASTREAM_H
+#define DATASTREAM_H
 
 #include <vector>
 #include <functional>
@@ -13,17 +13,16 @@ namespace modbit {
 // interval. Retrieved data is kept in memory so
 // no Web data is saved in filesystem.
 ///
-class WebStream {
+class DataStream {
 public:
-	explicit WebStream();
-	~WebStream();
+	explicit DataStream();
+	~DataStream();
 
-	// Disallow copying the WebStream.
-	WebStream(WebStream&) = delete;
-	WebStream &operator=(WebStream&) = delete;
+	// Disallow copying the DataStream.
+	DataStream(DataStream&) = delete;
+	DataStream &operator=(DataStream&) = delete;
 
 	using BufferEvent = std::function<void()>;
-
 
 private:
 	int m_timeout;

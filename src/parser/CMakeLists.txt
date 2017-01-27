@@ -1,9 +1,9 @@
 
 set(SRC
-    webstream.cpp)
+    datastream.cpp)
 
 set(HEADERS
     modbus.h
-    webstream.h)
+    datastream.h)
 
-add_library(rtuparser STATIC IMPORTED)
+add_library(parser STATIC ${SRC} ${HEADERS})

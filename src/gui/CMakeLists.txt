@@ -4,8 +4,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
+find_package(Qt5Widgets)
 
-find_package(Qt5::Widgets Qt5::Core)
+set(FORMS
+    mainwindow.ui)
 
 set(SRC
     app.cpp
@@ -15,8 +17,7 @@ set(HEADERS
     mainwindow.h)
 
 # Currently builds on Windows platform.
-if(MSVC)
-    add_executable(modbit WIN32 ${SRC} ${HEADERS})
-endif()
+add_executable(modbit WIN32 ${SRC} ${HEADERS} ${FORMS})
 
 target_link_libraries(modbit parser)
+target_link_libraries(modbit Qt5::Widgets Qt5::Core)
