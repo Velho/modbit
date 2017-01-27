@@ -6,6 +6,7 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5Widgets)
 
+# List the sources required to build the GUI.
 set(FORMS
     mainwindow.ui)
 
@@ -16,8 +17,12 @@ set(SRC
 set(HEADERS
     mainwindow.h)
 
+# Sources and Headers are automatically grouped in VS, but not
+# UI files which are essential for Qt application.
+source_group(Forms ${FORMS})
+
 # Currently builds on Windows platform.
 add_executable(modbit WIN32 ${SRC} ${HEADERS} ${FORMS})
 
-target_link_libraries(modbit parser)
+target_link_libraries(modbit modbus)
 target_link_libraries(modbit Qt5::Widgets Qt5::Core)
