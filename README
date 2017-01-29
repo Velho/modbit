@@ -1,9 +1,19 @@
 ModbusRTU Parser
 Data provided by Gambit Group.
 
+Network framework :
 Currently builds on Windows platform, but Linux support
 can be easily added through the build system. Due to lack
 of functioning Linux machine Windows is sadly an option.
+Linux implementation through Posix or either BSD.
+
+Testing : 
+What is left as TODO is adding UnitTest coverage. I've
+found that GTest & GMock are pretty good libraries for
+testing invidual classes and functionalities which I
+would've chosen for this project.
+Currently testing is done through implementation process
+which is quite bad approach..
 
 
 Velho 2017

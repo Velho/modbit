@@ -3,11 +3,13 @@
 # which then can be read and presented in the gui.
 
 set(SRC
-    datastream.cpp)
+    datastream.cpp
+    dataparser.cpp)
 
 set(HEADERS
     modbus.h
-    datastream.h)
+    datastream.h
+    dataparser.h)
 
 add_library(modbus STATIC ${SRC} ${HEADERS})
 
