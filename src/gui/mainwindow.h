@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <memory>
 
+#include "parser/modbus.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -16,8 +18,12 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void on_PushButton_Clicked();
+
 private:
     std::unique_ptr<Ui::MainWindow> m_window;
+    modbit::DataParser parser;
 };
 
 }

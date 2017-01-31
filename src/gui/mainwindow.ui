@@ -6,25 +6,92 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>532</width>
-    <height>385</height>
+    <width>801</width>
+    <height>608</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>20</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Get Data</string>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>532</width>
+     <width>801</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuRegister">
+    <property name="title">
+     <string>Register</string>
+    </property>
+    <addaction name="actionTable"/>
+   </widget>
+   <widget class="QMenu" name="menuLegend">
+    <property name="title">
+     <string>Legend</string>
+    </property>
+    <addaction name="actionScatter"/>
+    <addaction name="actionBar"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuRegister"/>
+   <addaction name="menuLegend"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionTable">
+   <property name="text">
+    <string>Table</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionScatter">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Scatter</string>
+   </property>
+  </action>
+  <action name="actionBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Bar</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

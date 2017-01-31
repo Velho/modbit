@@ -24,14 +24,21 @@ public:
     explicit DataStream(std::string&);
     ~DataStream();
 
+    /*
     // Disallow copying the DataStream.
     DataStream(DataStream&) = delete;
     DataStream &operator=(DataStream&) = delete;
+    */
 
     // Aliases for DataStream to work with.
     // BufferEvent is fired when BufferData is read.
-    using BufferData = std::vector<char*>;
-    using CBBufferEvent = std::function<void(BufferData&&)>;
+    typedef std::vector<char*> BufferData;
+    typedef std::function<void(std::string&&)> CBBufferEvent;
+	
+	// Required information 
+	enum class StatusCode {
+		OK = 200, NOT_MODIFIED = 304
+	};
 
     /**
      * Callback which is called when all data
@@ -62,16 +69,15 @@ public:
      * Requires socket to be initialized.
      * \return Size of read data.
      */
-    size_t Read();
+     StatusCode Read();
 
     /** 
      * Writes the provided data to the socket as BufferData.
      * Requires socket to be initialized.
      *
-     * \param Pointer to the BufferData containing the data to be written.
      * \return Returns true if the writing was successfull.
      */
-    bool Write(BufferData*);
+    bool Write(std::vector<char*>&);
 
 private:
     unsigned int m_mstimeout = 5000;
@@ -83,6 +89,8 @@ private:
     WSADATA m_socketdata;
     addrinfo m_hostspecs, *m_results, *m_addr;
     hostent *m_remotehost;
+
+    std::vector<char> response;
 
    /**
     * Creates ipv4 socket.
