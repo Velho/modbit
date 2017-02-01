@@ -12,8 +12,6 @@ DataParser::DataParser() :
 
 DataParser::~DataParser()
 {
-    if(m_threadrunning)
-        m_streamthread.join();
 }
 
 void DataParser::Connect()
@@ -27,14 +25,13 @@ void DataParser::Connect()
         m_threadrunning = true;
 }
 
+void DataParser::Disconnect()
+{
+	m_stream->SetRunning(false);
+}
+
 void DataParser::HandleData(std::string &&data)
 {
-    // If no data initialized or 
-    if(data != m_data || m_data.size() == 0)
-        m_data = data;
-    else
-        return;
-
     m_storage.emplace_back(new std::string(data));
 }
 

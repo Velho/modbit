@@ -39,11 +39,13 @@ DataStream::~DataStream()
 bool DataStream::Open()
 {
     // Create the socket and check if ctor was successful to init WinSock.
-    if(!m_initialized || !CreateSocket()) {
+    if(!m_initialized) {
         LOG_ERROR(std::string(__FUNCTION__), "Failed to initialize");
         WSACleanup();
         return false;
     }
+
+	CreateSocket();
 
     return true;
 }

@@ -53,6 +53,8 @@ public:
      */
     bool Open();
 
+	void SetRunning(bool flag) { m_running = flag; }
+
     /**
      * Sets the running flag to false.
      */

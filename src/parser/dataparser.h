@@ -25,6 +25,7 @@ public:
      * to the parser.
      */
     void Connect();
+	void Disconnect();
 
 private:
     DataStream *m_stream;
