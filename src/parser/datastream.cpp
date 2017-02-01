@@ -25,7 +25,7 @@ constexpr size_t g_PACKETSZ { 1024 };
  * provides the timeout for reading the output.
  */
 DataStream::DataStream(std::string &host) :
-    m_host { host }
+    m_host { host }, m_running { true }, m_initsocket { false }
 {
     m_initialized = (WSAStartup(MAKEWORD(2, 2), &m_socketdata) == 0);
 }
@@ -48,18 +48,20 @@ bool DataStream::Open()
     return true;
 }
 
+void DataStream::Close()
+{
+    m_running = false;
+}
+
 void DataStream::RequestData()
 {
-    std::vector<char*> http_get;
-    http_get.push_back("GET /feed.txt HTTP/1.1\r\n");
-    http_get.push_back("User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0\r\n");
-    http_get.push_back("Host: tuftuf.gambitlabs.fi\r\n");
-    http_get.push_back("Accept: text/html\r\n");
-    http_get.push_back("\r\n"); //  End the request with blank line.
+    // Run the RequestData loop, providing the data through callbacks.
+    while (m_running) {
+            Open();
+            Write();
+            Read();
 
-    if(Open()) {
-        Write(http_get);
-        Read();
+            Sleep(m_mstimeout);
     }
 }
 
@@ -74,26 +76,15 @@ DataStream::StatusCode DataStream::Read()
     BufferData data{}; // Empty our Buffer.
 
     // Initializes the nonblocking flag and TCP Socket as Stream.
-    u_long nonblock_flag = 1;
+    //u_long nonblock_flag = 1;
+    //ioctlsocket(m_clientsock, FIONBIO, &nonblock_flag);
 
-    ioctlsocket(m_clientsock, FIONBIO, &nonblock_flag);
-
-    /*
-    while ((recv_sz = recv(m_clientsock, buffer, g_PACKETSZ, 0)) > 0) {
-        int i = 0;
-        while (buffer[i] >= 32 || buffer[i] == '\n' || buffer[i] == '\r') {
-            feed += buffer[i];
-            i += 1;
-        }
-    }
-    */
-
-    size_t buf_len = 512;
+    size_t buf_len = 1024;
 
     std::string feed{};
     std::vector<char> buffer(buf_len);
     size_t bytes_read = 0;
-
+    
     do {
         bytes_read = recv(m_clientsock, buffer.data(), buf_len, 0);
 
@@ -102,35 +93,25 @@ DataStream::StatusCode DataStream::Read()
         else
             feed.append(buffer.begin(), buffer.end());
 
-    } while (bytes_read < buf_len);
+    } while (bytes_read == buf_len);
 
-    //OnBufferData(std::move(feed));
+    if(recv_sz != -1)
+        OnBufferData(std::move(feed));
+    
+    shutdown(m_clientsock, SD_SEND);
 
-    return recv_sz;
+    return StatusCode::OK;
 }
 
-bool DataStream::Write(std::vector<char*> &data)
+bool DataStream::Write()
 {
-    /*
-    int result = connect(
-        m_clientsock, 
-        reinterpret_cast<SOCKADDR*>(&m_socket->m_server),
-        sizeof(m_socket->m_clientsock));
-
-    if(result == SOCKET_ERROR) {
-        closesocket(m_socket->m_clientsock);
-        LOG_ERROR(std::string(__FUNCTION__), " Error Connecting socket");
-
-        return false;
-    }
-*/
-
+    auto data = GetRequestHeader();
     size_t sent = 0;
     size_t remaining = data.size();
     int result = 0;
 
     while(remaining > 0) {
-        const char *http = *data.data() + sent;
+        const char *http = data.c_str() + sent;
         result = send(m_clientsock, http, remaining, 0);
 
         if(result == SOCKET_ERROR) {
@@ -150,14 +131,25 @@ bool DataStream::Write(std::vector<char*> &data)
         return false;
     }
 
-	return true;
+    return true;
+}
+
+std::string DataStream::GetRequestHeader()
+{
+    std::string http_get;
+    http_get += "GET /feed.txt HTTP/1.1\r\n";
+    http_get += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0\r\n";
+    http_get += "Host: tuftuf.gambitlabs.fi\r\n";
+    http_get += "Accept: text/html\r\n";
+    http_get += "\r\n"; //  End the request with blank line.
+
+    return http_get;
 }
 
 bool DataStream::CreateSocket()
 {
     // Initializes the required server structures.
-    if(!InitServerInfo())
-        return false;
+    InitServerInfo();
 
     // linked list to traverse to get the correct socket.
     for(m_addr = m_results; m_addr != nullptr;
@@ -218,5 +210,9 @@ bool DataStream::InitServerInfo()
 
     // TODO : Make sure everything gets correct value.
     return true;
+}
+DataStream::StatusCode DataStream::GetResponseStatus(std::string &)
+{
+    return StatusCode();
 }
 }

@@ -34,11 +34,11 @@ public:
     // BufferEvent is fired when BufferData is read.
     typedef std::vector<char*> BufferData;
     typedef std::function<void(std::string&&)> CBBufferEvent;
-	
-	// Required information 
-	enum class StatusCode {
-		OK = 200, NOT_MODIFIED = 304
-	};
+    
+    // Required information from response.
+    enum class StatusCode {
+        OK = 200, NOT_MODIFIED = 304
+    };
 
     /**
      * Callback which is called when all data
@@ -52,6 +52,11 @@ public:
      * \return True if the Socket library was init correctly.
      */
     bool Open();
+
+    /**
+     * Sets the running flag to false.
+     */
+    void Close();
 
     void RequestData();
 
@@ -77,20 +82,24 @@ public:
      *
      * \return Returns true if the writing was successfull.
      */
-    bool Write(std::vector<char*>&);
+    bool Write();
 
 private:
-    unsigned int m_mstimeout = 5000;
+    unsigned int m_mstimeout = 25000;
     std::vector<std::string> m_errorlog;
     std::string m_host;
 
+    bool m_running;
     bool m_initialized;
+    bool m_initsocket;
     SOCKET m_clientsock;
     WSADATA m_socketdata;
     addrinfo m_hostspecs, *m_results, *m_addr;
     hostent *m_remotehost;
 
-    std::vector<char> response;
+    BufferData response;
+
+    std::string GetRequestHeader();
 
    /**
     * Creates ipv4 socket.
@@ -110,6 +119,9 @@ private:
      * successfully initialized.
      */
     bool InitServerInfo();
+
+
+    StatusCode GetResponseStatus(std::string&);
 };
 } // DATASTREAM_H
 #endif
