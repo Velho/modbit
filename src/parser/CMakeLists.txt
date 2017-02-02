@@ -3,6 +3,7 @@
 # which then can be read and presented in the gui.
 
 set(SRC
+    modbus.cpp
     datastream.cpp
     dataparser.cpp) 
 
