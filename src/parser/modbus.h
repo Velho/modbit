@@ -3,8 +3,9 @@
 
 #include "dataparser.h"
 
-namespace modbit {
+#include <map>
 
+namespace modbit {
 
 class Modbus {
 public:
@@ -23,10 +24,11 @@ public:
 	 */
 	void AddData(int reg, uint16_t val);
 
-	//std::vector<std::unique_ptr<Data_t>> &GetData() { return m_datatable; }
+	std::vector<Data_t*> &GetData() { return m_datatable; }
 
 private:
 	std::vector<Data_t*> m_datatable;
+    std::map<int, std::vector<Data_t*>> m_datamap;
 };
 }
 

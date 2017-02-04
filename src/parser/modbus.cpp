@@ -1,6 +1,7 @@
 #include "modbus.h"
 
 namespace modbit {
+
 Modbus::Modbus()
 {
 }

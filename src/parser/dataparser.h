@@ -7,6 +7,8 @@
 
 namespace modbit {
 
+class Modbus;
+
 /**
  * Parses the incoming Data from the stream.
  */
@@ -27,12 +29,19 @@ public:
     void Connect();
 	void Disconnect();
 
+    int GetIdx() { return m_parseridx; }
+    Modbus *GetData();
+
 private:
     DataStream *m_stream;
     std::thread m_streamthread;
     DataStorage m_storage;
-    std::string m_data;
     bool m_threadrunning;
+    
+    std::unique_ptr<Modbus> m_data;
+
+    int m_parseridx;
+    int m_storagesz;
 
     /**
      * Event Callback for OnBufferData.
@@ -40,6 +49,7 @@ private:
      * and correctly stores it for future.
      */
     void HandleData(std::string&&);
+    void ParseData();
 
 	void CloseStream();
 };

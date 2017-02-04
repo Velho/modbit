@@ -2,6 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
+#include <QtCharts/QChartGlobal>
+#include <QtCharts/QScatterSeries>
+#include <QChartView>
+
 #include <memory>
 
 #include "parser/modbus.h"
@@ -9,6 +14,8 @@
 namespace Ui {
 class MainWindow;
 }
+
+QT_CHARTS_USE_NAMESPACE
 
 namespace modbit {
 
@@ -19,11 +26,24 @@ public:
     ~MainWindow();
 
 public slots:
-    void on_PushButton_Clicked();
+    void OnStartClicked(bool);
+    void OnStopClicked(bool);
+
 
 private:
+    QTimer *m_timer;
     std::unique_ptr<Ui::MainWindow> m_window;
+    QChartView *m_chartview;
+	QChart *m_chart;
+    QScatterSeries *m_series;
     modbit::DataParser parser;
+
+    bool m_status;
+
+    void CreateChart();
+    void UpdateChart();
+
+    void closeEvent();
 };
 
 }

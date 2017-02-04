@@ -1,10 +1,7 @@
 # GUI makes use of Qt for Data Visualization.
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-
 find_package(Qt5Widgets)
+find_package(Qt5Charts)
 
 # List the sources required to build the GUI.
 set(FORMS
@@ -25,4 +22,4 @@ source_group(Forms ${FORMS})
 add_executable(modbit WIN32 ${SRC} ${HEADERS} ${FORMS})
 
 target_link_libraries(modbit modbus)
-target_link_libraries(modbit Qt5::Widgets Qt5::Core)
+target_link_libraries(modbit Qt5::Charts Qt5::Widgets Qt5::Core)
